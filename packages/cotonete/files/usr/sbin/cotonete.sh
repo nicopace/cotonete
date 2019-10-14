@@ -64,6 +64,10 @@ function check_and_fix_wifi {
         for iface in `ls /sys/kernel/debug/ieee80211/$phy/ | grep netdev | cut -c 8-`; do
             test_node=`get_best_node_on_iface $iface`
 
+            if [ -z $test_node ]; then
+                continue
+            fi
+
             raw_stations_info=`iwinfo $iface a`
             stations_info=`echo "$raw_stations_info" | filter_MCS_and_Mhz | four_lines_in_one`
             working_station_info=`echo "$stations_info" | grep $test_node`
